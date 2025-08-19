@@ -21,6 +21,7 @@ template:
 workflow:
   mode: interactive
   elicitation: advanced-elicitation
+  language: '{{language|zh-CN}}'
 
 sections:
   - id: section-id

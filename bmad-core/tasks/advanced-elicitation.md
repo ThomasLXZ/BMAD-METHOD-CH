@@ -28,6 +28,13 @@ User can request advanced elicitation on any agent output:
 - Agent selects 9 relevant methods for the context
 - Same simple 0-9 selection process
 
+## Language Adherence
+
+- During elicitation prompts and responses, follow the same language rules as in create-doc:
+  - Determine language from `workflow.language` or core-config `language`, fallback `en-US`
+  - If Chinese locale, interact and present options in Simplified Chinese; keep code identifiers in English; comments may be Chinese
+
+
 ## Task Instructions
 
 ### 1. Intelligent Method Selection
