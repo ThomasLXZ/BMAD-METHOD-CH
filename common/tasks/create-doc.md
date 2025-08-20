@@ -16,12 +16,13 @@ When this task is invoked:
 **VIOLATION INDICATOR:** If you create a complete document without user interaction, you have violated this workflow.
 
 ## Critical: Template Discovery
+
 ## Language and Output Rules
 
 - Detect language preference in the following order (first non-empty wins):
-  1) `workflow.language` in the template YAML (supports placeholders like `{{language|zh-CN}}`)
-  2) `.bmad-core/core-config.yaml` field `language` (e.g., `zh-CN`)
-  3) Default to `en-US` if none provided
+  1. `workflow.language` in the template YAML (supports placeholders like `{{language|zh-CN}}`)
+  2. `.bmad-core/core-config.yaml` field `language` (e.g., `zh-CN`)
+  3. Default to `en-US` if none provided
 
 - When language is set to a Chinese locale (e.g., `zh-CN`, `zh`, `zh-Hans`):
   - All generated narrative content should be written in Simplified Chinese
@@ -30,7 +31,14 @@ When this task is invoked:
 
 - When language is set to other locales, write all narrative content in that language. If the model lacks proficiency, ask the user for clarification or proceed with best-effort translation.
 
+## Chinese Localization of Fixed Labels
 
+When language is Chinese (e.g., zh-CN), in addition to narrative content:
+
+- Translate section titles (title), table column headers (columns), and fixed labels in generated outputs into Simplified Chinese unless the user explicitly asks to keep them in English.
+- Keep code identifiers, API routes, file paths, and type/interface names in English by default. Code comments may be Chinese.
+- If a template contains choice values or enumerations, present the label in Chinese while preserving the underlying canonical key or code if needed (e.g., '已拆分 (sharded)') to avoid ambiguity.
+- If uncertain about domain-specific term translation, ask the user for preference before proceeding.
 
 If a YAML Template has not been provided, list all templates from .bmad-core/templates or ask the user to provide another.
 

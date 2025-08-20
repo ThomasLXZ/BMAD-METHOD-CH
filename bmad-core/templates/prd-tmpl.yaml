@@ -1,12 +1,12 @@
 # <!-- Powered by BMAD™ Core -->
 template:
   id: prd-template-v2
-  name: Product Requirements Document
+  name: 产品需求文档
   version: 2.0
   output:
     format: markdown
     filename: docs/prd.md
-    title: "{{project_name}} Product Requirements Document (PRD)"
+    title: "{{project_name}} 产品需求文档（PRD）"
 
 workflow:
   mode: interactive
@@ -14,97 +14,97 @@ workflow:
 
 sections:
   - id: goals-context
-    title: Goals and Background Context
+    title: 目标与背景
     instruction: |
-      Ask if Project Brief document is available. If NO Project Brief exists, STRONGLY recommend creating one first using project-brief-tmpl (it provides essential foundation: problem statement, target users, success metrics, MVP scope, constraints). If user insists on PRD without brief, gather this information during Goals section. If Project Brief exists, review and use it to populate Goals (bullet list of desired outcomes) and Background Context (1-2 paragraphs on what this solves and why) so we can determine what is and is not in scope for PRD mvp. Either way this is critical to determine the requirements. Include Change Log table.
+      询问是否已有 Project Brief 文档。若没有 Project Brief，强烈建议先使用 project-brief-tmpl 创建（其提供关键基础：问题陈述、目标用户、成功度量、MVP 范围、约束）。若用户坚持在没有 Brief 的情况下直接编写 PRD，则在“目标”小节中收集上述信息。若已有 Project Brief，请先审阅并据此填写“目标”（以要点列出预期成果）与“背景”（1–2 段说明要解决什么问题以及原因），以便明确 PRD MVP 的范围内与范围外。无论哪种情况，这一步对确定需求都至关重要。请包含“变更记录”表。
     sections:
       - id: goals
-        title: Goals
+        title: 目标
         type: bullet-list
-        instruction: Bullet list of 1 line desired outcomes the PRD will deliver if successful - user and project desires
+        instruction: 用要点列出在 PRD 成功时希望达成的一行描述的结果——反映用户与项目的期望
       - id: background
-        title: Background Context
+        title: 背景
         type: paragraphs
-        instruction: 1-2 short paragraphs summarizing the background context, such as what we learned in the brief without being redundant with the goals, what and why this solves a problem, what the current landscape or need is
+        instruction: 用 1–2 段简述背景：结合 brief 中的要点但不要与“目标”重复，说明要解决的问题及原因、当前现状或需求
       - id: changelog
-        title: Change Log
+        title: 变更记录
         type: table
-        columns: [Date, Version, Description, Author]
-        instruction: Track document versions and changes
+        columns: [日期, 版本, 描述, 作者]
+        instruction: 记录文档版本与变更
 
   - id: requirements
-    title: Requirements
-    instruction: Draft the list of functional and non functional requirements under the two child sections
+    title: 需求
+    instruction: 在两个子小节下分别起草功能性与非功能性需求列表
     elicit: true
     sections:
       - id: functional
-        title: Functional
+        title: 功能性需求
         type: numbered-list
         prefix: FR
-        instruction: Each Requirement will be a bullet markdown and an identifier sequence starting with FR
+        instruction: 每条需求使用 Markdown 要点，并以 FR 开头的编号标识
         examples:
-          - "FR6: The Todo List uses AI to detect and warn against potentially duplicate todo items that are worded differently."
+          - "FR6: 待办列表使用 AI 识别并警示可能表述不同但实际相同的重复待办项。"
       - id: non-functional
-        title: Non Functional
+        title: 非功能性需求
         type: numbered-list
         prefix: NFR
-        instruction: Each Requirement will be a bullet markdown and an identifier sequence starting with NFR
+        instruction: 每条需求使用 Markdown 要点，并以 NFR 开头的编号标识
         examples:
-          - "NFR1: AWS service usage must aim to stay within free-tier limits where feasible."
+          - "NFR1: 在可行的情况下，AWS 服务使用应尽量保持在免费层限制内。"
 
   - id: ui-goals
-    title: User Interface Design Goals
+    title: 用户界面设计目标
     condition: PRD has UX/UI requirements
     instruction: |
-      Capture high-level UI/UX vision to guide Design Architect and to inform story creation. Steps:
+      捕捉高层级的 UI/UX 愿景，以指导设计架构师并为后续故事编写提供输入。步骤：
 
-      1. Pre-fill all subsections with educated guesses based on project context
-      2. Present the complete rendered section to user
-      3. Clearly let the user know where assumptions were made
-      4. Ask targeted questions for unclear/missing elements or areas needing more specification
-      5. This is NOT detailed UI spec - focus on product vision and user goals
+      1. 基于项目上下文对所有子小节进行合理预填
+      2. 将完整渲染的本节内容展示给用户
+      3. 清晰标注哪些内容带有假设
+      4. 针对不清晰/缺失或需进一步细化的部分提出定向问题
+      5. 注意这并非详细 UI 规范——重点在产品愿景与用户目标
     elicit: true
     choices:
       accessibility: [None, WCAG AA, WCAG AAA]
       platforms: [Web Responsive, Mobile Only, Desktop Only, Cross-Platform]
     sections:
       - id: ux-vision
-        title: Overall UX Vision
+        title: 整体 UX 愿景
       - id: interaction-paradigms
-        title: Key Interaction Paradigms
+        title: 关键交互范式
       - id: core-screens
-        title: Core Screens and Views
-        instruction: From a product perspective, what are the most critical screens or views necessary to deliver the the PRD values and goals? This is meant to be Conceptual High Level to Drive Rough Epic or User Stories
+        title: 核心界面与视图
+        instruction: 从产品视角出发，哪些界面/视图对于实现 PRD 的价值与目标最关键？此处为概念性的高层设计，用于驱动粗粒度的史诗或用户故事。
         examples:
-          - "Login Screen"
-          - "Main Dashboard"
-          - "Item Detail Page"
-          - "Settings Page"
+          - "登录页"
+          - "主控制台"
+          - "条目详情页"
+          - "设置页"
       - id: accessibility
-        title: "Accessibility: {None|WCAG AA|WCAG AAA|Custom Requirements}"
+        title: "无障碍：{None|WCAG AA|WCAG AAA|Custom Requirements}"
       - id: branding
-        title: Branding
-        instruction: Any known branding elements or style guides that must be incorporated?
+        title: 品牌
+        instruction: 是否存在必须纳入的品牌元素或风格指南？
         examples:
-          - "Replicate the look and feel of early 1900s black and white cinema, including animated effects replicating film damage or projector glitches during page or state transitions."
-          - "Attached is the full color pallet and tokens for our corporate branding."
+          - "复刻 20 世纪初黑白电影的质感，包括页面或状态切换时模拟胶片损伤或放映机卡顿的动画效果。"
+          - "附上公司品牌的完整色板与 Token。"
       - id: target-platforms
-        title: "Target Device and Platforms: {Web Responsive|Mobile Only|Desktop Only|Cross-Platform}"
+        title: "目标设备与平台：{Web Responsive|Mobile Only|Desktop Only|Cross-Platform}"
         examples:
-          - "Web Responsive, and all mobile platforms"
-          - "iPhone Only"
-          - "ASCII Windows Desktop"
+          - "Web 自适应，并覆盖全部移动平台"
+          - "仅 iPhone"
+          - "ASCII 风格的 Windows 桌面端"
 
   - id: technical-assumptions
-    title: Technical Assumptions
+    title: 技术假设
     instruction: |
-      Gather technical decisions that will guide the Architect. Steps:
+      收集将指导架构师的技术决策。步骤：
 
-      1. Check if {root}/data/technical-preferences.yaml or an attached technical-preferences file exists - use it to pre-populate choices
-      2. Ask user about: languages, frameworks, starter templates, libraries, APIs, deployment targets
-      3. For unknowns, offer guidance based on project goals and MVP scope
-      4. Document ALL technical choices with rationale (why this choice fits the project)
-      5. These become constraints for the Architect - be specific and complete
+      1. 检查 {root}/data/technical-preferences.yaml 或是否有附加的 technical-preferences 文件——若有，用其预填选项
+      2. 询问用户：编程语言、框架、起始模板、库、API、部署目标
+      3. 对未知项基于项目目标与 MVP 范围给出建议
+      4. 记录所有技术选择并说明理由（为何适配本项目）
+      5. 以上将成为架构师的约束条件——务必具体且完整
     elicit: true
     choices:
       repository: [Monorepo, Polyrepo]
@@ -112,30 +112,30 @@ sections:
       testing: [Unit Only, Unit + Integration, Full Testing Pyramid]
     sections:
       - id: repository-structure
-        title: "Repository Structure: {Monorepo|Polyrepo|Multi-repo}"
+        title: "仓库结构：{Monorepo|Polyrepo|Multi-repo}"
       - id: service-architecture
-        title: Service Architecture
-        instruction: "CRITICAL DECISION - Document the high-level service architecture (e.g., Monolith, Microservices, Serverless functions within a Monorepo)."
+        title: 服务架构
+        instruction: "关键决策——记录高层服务架构（例如：单体、微服务、在 Monorepo 中的无服务器函数）。"
       - id: testing-requirements
-        title: Testing Requirements
-        instruction: "CRITICAL DECISION - Document the testing requirements, unit only, integration, e2e, manual, need for manual testing convenience methods)."
+        title: 测试需求
+        instruction: "关键决策——记录测试需求：仅单元测试、集成测试、端到端测试、手工测试，以及是否需要便捷的手工测试方式。"
       - id: additional-assumptions
-        title: Additional Technical Assumptions and Requests
-        instruction: Throughout the entire process of drafting this document, if any other technical assumptions are raised or discovered appropriate for the architect, add them here as additional bulleted items
+        title: 其他技术假设与请求
+        instruction: 在拟定文档的全过程中，如出现适合架构师关注的其他技术假设，请在此以要点形式补充。
 
   - id: epic-list
-    title: Epic List
+    title: 史诗列表
     instruction: |
-      Present a high-level list of all epics for user approval. Each epic should have a title and a short (1 sentence) goal statement. This allows the user to review the overall structure before diving into details.
+      提供一份高层级的史诗清单供用户确认。每个史诗应包含标题与一句话目标描述。这样用户可以在深入细节前先审视整体结构。
 
-      CRITICAL: Epics MUST be logically sequential following agile best practices:
+      重要要求：史诗必须遵循敏捷最佳实践，保持逻辑顺序：
 
-      - Each epic should deliver a significant, end-to-end, fully deployable increment of testable functionality
-      - Epic 1 must establish foundational project infrastructure (app setup, Git, CI/CD, core services) unless we are adding new functionality to an existing app, while also delivering an initial piece of functionality, even as simple as a health-check route or display of a simple canary page - remember this when we produce the stories for the first epic!
-      - Each subsequent epic builds upon previous epics' functionality delivering major blocks of functionality that provide tangible value to users or business when deployed
-      - Not every project needs multiple epics, an epic needs to deliver value. For example, an API completed can deliver value even if a UI is not complete and planned for a separate epic.
-      - Err on the side of less epics, but let the user know your rationale and offer options for splitting them if it seems some are too large or focused on disparate things.
-      - Cross Cutting Concerns should flow through epics and stories and not be final stories. For example, adding a logging framework as a last story of an epic, or at the end of a project as a final epic or story would be terrible as we would not have logging from the beginning.
+      - 每个史诗应交付一段可测试、端到端、可部署的有价值功能增量
+      - 史诗 1 通常需要建立基础项目基础设施（应用初始化、Git、CI/CD、核心服务），除非是在现有应用上新增功能；同时也应交付一段最小可工作的功能（例如健康检查路由或一个简单的 Canary 页面）——在编写第一个史诗的故事时务必牢记这一点！
+      - 后续每个史诗都应在前面史诗的功能之上构建，交付对用户或业务有明显价值的重大功能块
+      - 并非所有项目都需要多个史诗；史诗应能交付价值。例如，即使 UI 尚未完成并计划在后续史诗处理，一个已完成的 API 也能交付价值
+      - 倾向于较少数量的史诗，但应向用户说明理由；若某些史诗过大或关注点分散，可提供拆分方案
+      - 横切关注点应贯穿于各个史诗与故事中，而不应作为最后的故事或独立史诗。例如，将日志框架作为最后一个故事添加会很糟糕，因为我们从项目开始就需要日志能力
     elicit: true
     examples:
       - "Epic 1: Foundation & Core Infrastructure: Establish project setup, authentication, and basic user management"
@@ -144,60 +144,60 @@ sections:
       - "Epic 4: Reporting & Analytics: Provide insights and data visualization for users"
 
   - id: epic-details
-    title: Epic {{epic_number}} {{epic_title}}
+    title: 史诗 {{epic_number}} {{epic_title}}
     repeatable: true
     instruction: |
-      After the epic list is approved, present each epic with all its stories and acceptance criteria as a complete review unit.
+      史诗列表获批后，将每个史诗连同其所有故事与验收标准作为完整的审阅单元进行展示。
 
-      For each epic provide expanded goal (2-3 sentences describing the objective and value all the stories will achieve).
+      对每个史诗补充更详细的目标（2–3 句话，说明所有故事要实现的目标与价值）。
 
-      CRITICAL STORY SEQUENCING REQUIREMENTS:
+      重要的故事排序要求：
 
-      - Stories within each epic MUST be logically sequential
-      - Each story should be a "vertical slice" delivering complete functionality aside from early enabler stories for project foundation
-      - No story should depend on work from a later story or epic
-      - Identify and note any direct prerequisite stories
-      - Focus on "what" and "why" not "how" (leave technical implementation to Architect) yet be precise enough to support a logical sequential order of operations from story to story.
-      - Ensure each story delivers clear user or business value, try to avoid enablers and build them into stories that deliver value.
-      - Size stories for AI agent execution: Each story must be completable by a single AI agent in one focused session without context overflow
-      - Think "junior developer working for 2-4 hours" - stories must be small, focused, and self-contained
-      - If a story seems complex, break it down further as long as it can deliver a vertical slice
+      - 每个史诗内的故事必须保持逻辑顺序
+      - 每个故事应是一个“纵向切片”，能独立交付完整功能（早期用于搭建基础的使能故事除外）
+      - 任何故事不应依赖于后续故事或后续史诗的工作
+      - 标注并说明直接的前置依赖故事
+      - 关注“做什么/为什么”，而非“如何做”（技术实现交由架构师），但需足够清晰以支持从一个故事到下一个故事的逻辑顺序
+      - 确保每个故事都能交付明确的用户或业务价值；尽量避免“纯使能”项，应把使能融入到有价值的故事中
+      - 为 AI 智能体执行设定合理粒度：每个故事应能在一次集中的会话中由单个智能体完成且不溢出上下文
+      - 参考“初级开发 2–4 小时”的工作量：故事应小、聚焦、可自洽
+      - 如果某个故事显得复杂，可以继续拆分，只要它仍能交付一个完整的纵向切片
     elicit: true
     template: "{{epic_goal}}"
     sections:
       - id: story
-        title: Story {{epic_number}}.{{story_number}} {{story_title}}
+        title: 故事 {{epic_number}}.{{story_number}} {{story_title}}
         repeatable: true
         template: |
-          As a {{user_type}},
-          I want {{action}},
-          so that {{benefit}}.
+          作为 {{user_type}}，
+          我想要 {{action}}，
+          以便 {{benefit}}。
         sections:
           - id: acceptance-criteria
-            title: Acceptance Criteria
+            title: 验收标准
             type: numbered-list
             item_template: "{{criterion_number}}: {{criteria}}"
             repeatable: true
             instruction: |
-              Define clear, comprehensive, and testable acceptance criteria that:
+              制定清晰、全面、可测试的验收标准：
 
-              - Precisely define what "done" means from a functional perspective
-              - Are unambiguous and serve as basis for verification
-              - Include any critical non-functional requirements from the PRD
-              - Consider local testability for backend/data components
-              - Specify UI/UX requirements and framework adherence where applicable
-              - Avoid cross-cutting concerns that should be in other stories or PRD sections
+              - 从功能角度精准界定“完成”的含义
+              - 表述清晰无歧义，可作为验证依据
+              - 包含 PRD 中任何关键的非功能性要求
+              - 考虑后端/数据组件的本地可测性
+              - 在适用场合说明 UI/UX 要求与框架遵循
+              - 避免将横切关注点放入此处；应放在其他故事或 PRD 相应章节
 
   - id: checklist-results
-    title: Checklist Results Report
-    instruction: Before running the checklist and drafting the prompts, offer to output the full updated PRD. If outputting it, confirm with the user that you will be proceeding to run the checklist and produce the report. Once the user confirms, execute the pm-checklist and populate the results in this section.
+    title: 清单结果报告
+    instruction: 在运行清单并起草提示之前，先提供导出完整的最新 PRD 的选项。若选择导出，请与用户确认接下来将运行清单并生成报告。用户确认后，执行 pm-checklist 并将结果填入本节。
 
   - id: next-steps
-    title: Next Steps
+    title: 后续步骤
     sections:
       - id: ux-expert-prompt
-        title: UX Expert Prompt
-        instruction: This section will contain the prompt for the UX Expert, keep it short and to the point to initiate create architecture mode using this document as input.
+        title: UX 专家提示
+        instruction: 本节用于编写 UX 专家的提示词。请保持简洁有力，用本 PRD 作为输入触发创建架构模式。
       - id: architect-prompt
-        title: Architect Prompt
-        instruction: This section will contain the prompt for the Architect, keep it short and to the point to initiate create architecture mode using this document as input.
+        title: 架构师提示
+        instruction: 本节用于编写架构师的提示词。请保持简洁有力，用本 PRD 作为输入触发创建架构模式。

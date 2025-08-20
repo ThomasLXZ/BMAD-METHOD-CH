@@ -9,6 +9,10 @@ const inquirer = require('inquirer').default || require('inquirer');
 const semver = require('semver');
 const https = require('node:https');
 
+const { createI18n } = require('../lib/i18n');
+let lang = process.env.BMAD_LANG || process.env.LANG || 'zh-CN';
+let t = createI18n(lang);
+
 // Handle both execution contexts (from root via npx or from installer directory)
 let version;
 let installer;
@@ -37,13 +41,12 @@ try {
   }
 }
 
-program
-  .version(version)
-  .description('BMad Method installer - Universal AI agent framework for any domain');
+program.version(version).description(t('program.description'));
 
 program
   .command('install')
-  .description('Install BMad Method agents and tools')
+  .description(t('cmd.install.desc'))
+  .option('--lang <locale>', t('opt.lang.desc'))
   .option('-f, --full', 'Install complete BMad Method')
   .option('-x, --expansion-only', 'Install only expansion packs (no bmad-core)')
   .option('-d, --directory <path>', 'Installation directory')
@@ -57,6 +60,11 @@ program
   )
   .action(async (options) => {
     try {
+      if (options.lang) {
+        lang = options.lang;
+        t = createI18n(lang);
+        process.env.BMAD_LANG = lang;
+      }
       if (!options.full && !options.expansionOnly) {
         // Interactive mode
         const answers = await promptInstallation();
@@ -86,7 +94,7 @@ program
 
 program
   .command('update')
-  .description('Update existing BMad installation')
+  .description(t('cmd.update.desc'))
   .option('--force', 'Force update, overwriting modified files')
   .option('--dry-run', 'Show what would be updated without making changes')
   .action(async () => {
@@ -101,9 +109,9 @@ program
 // Command to check if updates are available
 program
   .command('update-check')
-  .description('Check for BMad Update')
+  .description(t('cmd.updateCheck.desc'))
   .action(async () => {
-    console.log('Checking for updates...');
+    console.log(t('update.checking'));
 
     // Make HTTP request to npm registry for latest version info
     const req = https.get(`https://registry.npmjs.org/${packageName}/latest`, (res) => {
@@ -126,14 +134,16 @@ program
           // Compare versions using semver
           if (semver.gt(latest, version)) {
             console.log(
-              chalk.bold.blue(`⚠️  ${packageName} update available: ${version} → ${latest}`),
+              chalk.bold.blue(
+                t('update.available', { name: packageName, current: version, latest }),
+              ),
             );
-            console.log(chalk.bold.blue('\nInstall latest by running:'));
+            console.log(chalk.bold.blue(`\n${t('update.install.latest')}`));
             console.log(chalk.bold.magenta(`  npm install ${packageName}@latest`));
-            console.log(chalk.dim('  or'));
+            console.log(chalk.dim(`  ${t('update.or')}`));
             console.log(chalk.bold.magenta(`  npx ${packageName}@latest`));
           } else {
-            console.log(chalk.bold.blue(`✨ ${packageName} is up to date`));
+            console.log(chalk.bold.blue(t('update.upToDate', { name: packageName })));
           }
         } catch (error) {
           // Handle JSON parsing errors
@@ -144,19 +154,19 @@ program
 
     // Handle network/connection errors
     req.on('error', (error) => {
-      console.error(chalk.red('Update check failed:'), error.message);
+      console.error(chalk.red(t('update.failed')), error.message);
     });
 
     // Set 30 second timeout to prevent hanging
     req.setTimeout(30_000, () => {
       req.destroy();
-      console.error(chalk.red('Update check timed out'));
+      console.error(chalk.red(t('update.timeout')));
     });
   });
 
 program
   .command('list:expansions')
-  .description('List available expansion packs')
+  .description(t('cmd.listExp.desc'))
   .action(async () => {
     try {
       await installer.listExpansionPacks();
@@ -168,7 +178,7 @@ program
 
 program
   .command('status')
-  .description('Show installation status')
+  .description(t('cmd.status.desc'))
   .action(async () => {
     try {
       await installer.showStatus();
@@ -180,9 +190,9 @@ program
 
 program
   .command('flatten')
-  .description('Flatten codebase to XML format')
-  .option('-i, --input <path>', 'Input directory to flatten', process.cwd())
-  .option('-o, --output <path>', 'Output file path', 'flattened-codebase.xml')
+  .description(t('cmd.flatten.desc'))
+  .option('-i, --input <path>', t('opt.input.desc'), process.cwd())
+  .option('-o, --output <path>', t('opt.output.desc'), 'flattened-codebase.xml')
   .action(async (options) => {
     try {
       await installer.flatten(options);
@@ -196,17 +206,17 @@ async function promptInstallation() {
   // Display ASCII logo
   console.log(
     chalk.bold.cyan(`
-██████╗ ███╗   ███╗ █████╗ ██████╗       ███╗   ███╗███████╗████████╗██╗  ██╗ ██████╗ ██████╗ 
+██████╗ ███╗   ███╗ █████╗ ██████╗       ███╗   ███╗███████╗████████╗██╗  ██╗ ██████╗ ██████╗
 ██╔══██╗████╗ ████║██╔══██╗██╔══██╗      ████╗ ████║██╔════╝╚══██╔══╝██║  ██║██╔═══██╗██╔══██╗
 ██████╔╝██╔████╔██║███████║██║  ██║█████╗██╔████╔██║█████╗     ██║   ███████║██║   ██║██║  ██║
 ██╔══██╗██║╚██╔╝██║██╔══██║██║  ██║╚════╝██║╚██╔╝██║██╔══╝     ██║   ██╔══██║██║   ██║██║  ██║
 ██████╔╝██║ ╚═╝ ██║██║  ██║██████╔╝      ██║ ╚═╝ ██║███████╗   ██║   ██║  ██║╚██████╔╝██████╔╝
-╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚═════╝       ╚═╝     ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝ 
+╚═════╝ ╚═╝     ╚═╝╚═╝  ╚═╝╚═════╝       ╚═╝     ╚═╝╚══════╝   ╚═╝   ╚═╝  ╚═╝ ╚═════╝ ╚═════╝
   `),
   );
 
-  console.log(chalk.bold.magenta('🚀 Universal AI Agent Framework for Any Domain'));
-  console.log(chalk.bold.blue(`✨ Installer v${version}\n`));
+  console.log(chalk.bold.magenta(`🚀 ${t('install.banner.subtitle')}`));
+  console.log(chalk.bold.blue(`✨ ${t('install.version', { version })}\n`));
 
   const answers = {};
 
@@ -215,11 +225,11 @@ async function promptInstallation() {
     {
       type: 'input',
       name: 'directory',
-      message: 'Enter the full path to your project directory where BMad should be installed:',
+      message: t('q.directory'),
       default: path.resolve('.'),
       validate: (input) => {
         if (!input.trim()) {
-          return 'Please enter a valid project path';
+          return t('q.directory.invalid');
         }
         return true;
       },
@@ -294,11 +304,11 @@ async function promptInstallation() {
     {
       type: 'checkbox',
       name: 'selectedItems',
-      message: 'Select what to install/update (use space to select, enter to continue):',
+      message: t('q.select.items'),
       choices: choices,
       validate: (selected) => {
         if (selected.length === 0) {
-          return 'Please select at least one item to install';
+          return t('q.select.items.invalid');
         }
         return true;
       },
@@ -311,15 +321,15 @@ async function promptInstallation() {
 
   // Ask sharding questions if installing BMad core
   if (selectedItems.includes('bmad-core')) {
-    console.log(chalk.cyan('\n📋 Document Organization Settings'));
-    console.log(chalk.dim('Configure how your project documentation should be organized.\n'));
+    console.log(chalk.cyan(`\n📋 ${t('install.doc.settings')}`));
+    console.log(chalk.dim(`${t('install.doc.settings.tip')}\n`));
 
     // Ask about PRD sharding
     const { prdSharded } = await inquirer.prompt([
       {
         type: 'confirm',
         name: 'prdSharded',
-        message: 'Will the PRD (Product Requirements Document) be sharded into multiple files?',
+        message: t('q.prdSharded'),
         default: true,
       },
     ]);
@@ -330,7 +340,7 @@ async function promptInstallation() {
       {
         type: 'confirm',
         name: 'architectureSharded',
-        message: 'Will the architecture documentation be sharded into multiple files?',
+        message: t('q.archSharded'),
         default: true,
       },
     ]);
@@ -338,36 +348,24 @@ async function promptInstallation() {
 
     // Show warning if architecture sharding is disabled
     if (!architectureSharded) {
-      console.log(chalk.yellow.bold('\n⚠️  IMPORTANT: Architecture Sharding Disabled'));
-      console.log(
-        chalk.yellow(
-          'With architecture sharding disabled, you should still create the files listed',
-        ),
-      );
-      console.log(
-        chalk.yellow(
-          'in devLoadAlwaysFiles (like coding-standards.md, tech-stack.md, source-tree.md)',
-        ),
-      );
-      console.log(chalk.yellow('as these are used by the dev agent at runtime.'));
-      console.log(
-        chalk.yellow(
-          '\nAlternatively, you can remove these files from the devLoadAlwaysFiles list',
-        ),
-      );
-      console.log(chalk.yellow('in your core-config.yaml after installation.'));
+      console.log(chalk.yellow.bold(`\n⚠️  ${t('warn.arch.off.title')}`));
+      console.log(chalk.yellow(t('warn.arch.off.line1')));
+      console.log(chalk.yellow(t('warn.arch.off.line2')));
+      console.log(chalk.yellow(t('warn.arch.off.line3')));
+      console.log(chalk.yellow(t('warn.arch.off.line4')));
+      if (t('warn.arch.off.line5')) console.log(chalk.yellow(t('warn.arch.off.line5')));
 
       const { acknowledge } = await inquirer.prompt([
         {
           type: 'confirm',
           name: 'acknowledge',
-          message: 'Do you acknowledge this requirement and want to proceed?',
+          message: t('q.arch.off.ack'),
           default: false,
         },
       ]);
 
       if (!acknowledge) {
-        console.log(chalk.red('Installation cancelled.'));
+        console.log(chalk.red(t('cancelled')));
         process.exit(0);
       }
     }
@@ -379,21 +377,16 @@ async function promptInstallation() {
 
   while (!ideSelectionComplete) {
     console.log(chalk.cyan('\n🛠️  IDE Configuration'));
-    console.log(
-      chalk.bold.yellow.bgRed(
-        ' ⚠️  IMPORTANT: This is a MULTISELECT! Use SPACEBAR to toggle each IDE! ',
-      ),
-    );
-    console.log(chalk.bold.magenta('🔸 Use arrow keys to navigate'));
-    console.log(chalk.bold.magenta('🔸 Use SPACEBAR to select/deselect IDEs'));
-    console.log(chalk.bold.magenta('🔸 Press ENTER when finished selecting\n'));
+    console.log(chalk.bold.yellow.bgRed(` ⚠️  ${t('ide.multiselect.warn')} `));
+    console.log(chalk.bold.magenta(`🔸 ${t('ide.use.arrows')}`));
+    console.log(chalk.bold.magenta(`🔸 ${t('ide.use.space')}`));
+    console.log(chalk.bold.magenta(`🔸 ${t('ide.use.enter')}\n`));
 
     const ideResponse = await inquirer.prompt([
       {
         type: 'checkbox',
         name: 'ides',
-        message:
-          'Which IDE(s) do you want to configure? (Select with SPACEBAR, confirm with ENTER):',
+        message: t('ide.select'),
         choices: [
           { name: 'Cursor', value: 'cursor' },
           { name: 'Claude Code', value: 'claude-code' },
@@ -418,19 +411,13 @@ async function promptInstallation() {
         {
           type: 'confirm',
           name: 'confirmNoIde',
-          message: chalk.red(
-            '⚠️  You have NOT selected any IDEs. This means NO IDE integration will be set up. Is this correct?',
-          ),
+          message: chalk.red(t('ide.none.confirm')),
           default: false,
         },
       ]);
 
       if (!confirmNoIde) {
-        console.log(
-          chalk.bold.red(
-            '\n🔄 Returning to IDE selection. Remember to use SPACEBAR to select IDEs!\n',
-          ),
-        );
+        console.log(chalk.bold.red(`\n🔄 ${t('ide.return')}\n`));
         continue; // Go back to IDE selection only
       }
     }
@@ -443,27 +430,25 @@ async function promptInstallation() {
 
   // Configure GitHub Copilot immediately if selected
   if (ides.includes('github-copilot')) {
-    console.log(chalk.cyan('\n🔧 GitHub Copilot Configuration'));
-    console.log(
-      chalk.dim('BMad works best with specific VS Code settings for optimal agent experience.\n'),
-    );
+    console.log(chalk.cyan(`\n🔧 ${t('copilot.config')}`));
+    console.log(chalk.dim(`${t('copilot.tip')}\n`));
 
     const { configChoice } = await inquirer.prompt([
       {
         type: 'list',
         name: 'configChoice',
-        message: chalk.yellow('How would you like to configure GitHub Copilot settings?'),
+        message: chalk.yellow(t('q.copilot.configChoice')),
         choices: [
           {
-            name: 'Use recommended defaults (fastest setup)',
+            name: t('copilot.choice.defaults'),
             value: 'defaults',
           },
           {
-            name: 'Configure each setting manually (customize to your preferences)',
+            name: t('copilot.choice.manual'),
             value: 'manual',
           },
           {
-            name: "Skip settings configuration (I'll configure manually later)",
+            name: t('copilot.choice.skip'),
             value: 'skip',
           },
         ],
@@ -479,38 +464,34 @@ async function promptInstallation() {
     {
       type: 'confirm',
       name: 'includeWebBundles',
-      message:
-        'Would you like to include pre-built web bundles? (standalone files for ChatGPT, Claude, Gemini)',
+      message: t('q.webBundles'),
       default: false,
     },
   ]);
 
   if (includeWebBundles) {
-    console.log(chalk.cyan('\n📦 Web bundles are standalone files perfect for web AI platforms.'));
-    console.log(
-      chalk.dim('   You can choose different teams/agents than your IDE installation.\n'),
-    );
+    console.log(chalk.cyan(`\n📦 ${t('webBundles.tip')}`));
 
     const { webBundleType } = await inquirer.prompt([
       {
         type: 'list',
         name: 'webBundleType',
-        message: 'What web bundles would you like to include?',
+        message: t('webBundles.choose'),
         choices: [
           {
-            name: 'All available bundles (agents, teams, expansion packs)',
+            name: t('webBundles.all'),
             value: 'all',
           },
           {
-            name: 'Specific teams only',
+            name: t('webBundles.teams'),
             value: 'teams',
           },
           {
-            name: 'Individual agents only',
+            name: t('webBundles.agents'),
             value: 'agents',
           },
           {
-            name: 'Custom selection',
+            name: t('webBundles.custom'),
             value: 'custom',
           },
         ],
@@ -526,7 +507,7 @@ async function promptInstallation() {
         {
           type: 'checkbox',
           name: 'selectedTeams',
-          message: 'Select team bundles to include:',
+          message: t('webBundles.selectTeams'),
           choices: teams.map((t) => ({
             name: `${t.icon || '📋'} ${t.name}: ${t.description}`,
             value: t.id,
@@ -534,7 +515,7 @@ async function promptInstallation() {
           })),
           validate: (answer) => {
             if (answer.length === 0) {
-              return 'You must select at least one team.';
+              return t('webBundles.selectTeams.invalid');
             }
             return true;
           },
@@ -549,7 +530,7 @@ async function promptInstallation() {
         {
           type: 'confirm',
           name: 'includeIndividualAgents',
-          message: 'Also include individual agent bundles?',
+          message: t('webBundles.includeAgents'),
           default: true,
         },
       ]);
@@ -560,11 +541,11 @@ async function promptInstallation() {
       {
         type: 'input',
         name: 'webBundlesDirectory',
-        message: 'Enter directory for web bundles:',
+        message: t('q.webBundles.dir'),
         default: `${answers.directory}/web-bundles`,
         validate: (input) => {
           if (!input.trim()) {
-            return 'Please enter a valid directory path';
+            return t('q.directory.invalid');
           }
           return true;
         },

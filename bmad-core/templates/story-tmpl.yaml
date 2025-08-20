@@ -1,12 +1,12 @@
 # <!-- Powered by BMAD™ Core -->
 template:
   id: story-template-v2
-  name: Story Document
+  name: 故事文档
   version: 2.0
   output:
     format: markdown
     filename: docs/stories/{{epic_num}}.{{story_num}}.{{story_title_short}}.md
-    title: "Story {{epic_num}}.{{story_num}}: {{story_title_short}}"
+    title: "故事 {{epic_num}}.{{story_num}}：{{story_title_short}}"
 
 workflow:
   mode: interactive
@@ -14,125 +14,125 @@ workflow:
 
 agent_config:
   editable_sections:
-    - Status
-    - Story
-    - Acceptance Criteria
-    - Tasks / Subtasks
-    - Dev Notes
-    - Testing
-    - Change Log
+    - 状态
+    - 故事
+    - 验收标准
+    - 任务 / 子任务
+    - 开发备注
+    - 测试
+    - 变更记录
 
 sections:
   - id: status
-    title: Status
+    title: 状态
     type: choice
     choices: [Draft, Approved, InProgress, Review, Done]
-    instruction: Select the current status of the story
+    instruction: 选择该故事当前的状态
     owner: scrum-master
     editors: [scrum-master, dev-agent]
 
   - id: story
-    title: Story
+    title: 故事
     type: template-text
     template: |
-      **As a** {{role}},
-      **I want** {{action}},
-      **so that** {{benefit}}
-    instruction: Define the user story using the standard format with role, action, and benefit
+      **作为** {{role}}，
+      **我想要** {{action}}，
+      **以便** {{benefit}}
+    instruction: 使用角色、动作、收益的标准格式来定义用户故事
     elicit: true
     owner: scrum-master
     editors: [scrum-master]
 
   - id: acceptance-criteria
-    title: Acceptance Criteria
+    title: 验收标准
     type: numbered-list
-    instruction: Copy the acceptance criteria numbered list from the epic file
+    instruction: 从史诗（Epic）文档中复制验收标准编号列表
     elicit: true
     owner: scrum-master
     editors: [scrum-master]
 
   - id: tasks-subtasks
-    title: Tasks / Subtasks
+    title: 任务 / 子任务
     type: bullet-list
     instruction: |
-      Break down the story into specific tasks and subtasks needed for implementation.
-      Reference applicable acceptance criteria numbers where relevant.
+      将该故事拆解为实现所需的具体任务与子任务。
+      在相关位置引用对应的验收标准编号。
     template: |
-      - [ ] Task 1 (AC: # if applicable)
-        - [ ] Subtask1.1...
-      - [ ] Task 2 (AC: # if applicable)
-        - [ ] Subtask 2.1...
-      - [ ] Task 3 (AC: # if applicable)
-        - [ ] Subtask 3.1...
+      - [ ] 任务 1（验收标准：# 如适用）
+        - [ ] 子任务 1.1…
+      - [ ] 任务 2（验收标准：# 如适用）
+        - [ ] 子任务 2.1…
+      - [ ] 任务 3（验收标准：# 如适用）
+        - [ ] 子任务 3.1…
     elicit: true
     owner: scrum-master
     editors: [scrum-master, dev-agent]
 
   - id: dev-notes
-    title: Dev Notes
+    title: 开发备注
     instruction: |
-      Populate relevant information, only what was pulled from actual artifacts from docs folder, relevant to this story:
-      - Do not invent information
-      - If known add Relevant Source Tree info that relates to this story
-      - If there were important notes from previous story that are relevant to this one, include them here
-      - Put enough information in this section so that the dev agent should NEVER need to read the architecture documents, these notes along with the tasks and subtasks must give the Dev Agent the complete context it needs to comprehend with the least amount of overhead the information to complete the story, meeting all AC and completing all tasks+subtasks
+      填充与本故事直接相关且来源于仓库 docs 目录真实资料的内容：
+      - 切勿凭空编造信息
+      - 如已知，请补充与本故事相关的源码树位置/模块信息
+      - 如前序故事中存在与本故事相关的重要备注，请在此处引用
+      - 请提供足够信息，使开发智能体无需查阅架构文档；本节与“任务/子任务”应共同提供完整上下文，便于在最小额外成本下完成故事并满足全部验收标准（AC）与任务
     elicit: true
     owner: scrum-master
     editors: [scrum-master]
     sections:
       - id: testing-standards
-        title: Testing
+        title: 测试
         instruction: |
-          List Relevant Testing Standards from Architecture the Developer needs to conform to:
-          - Test file location
-          - Test standards
-          - Testing frameworks and patterns to use
-          - Any specific testing requirements for this story
+          从架构文档中列出开发需遵循的相关测试规范：
+          - 测试文件位置
+          - 测试规范/约定
+          - 需使用的测试框架与模式
+          - 与本故事特定相关的任何测试要求
         elicit: true
         owner: scrum-master
         editors: [scrum-master]
 
   - id: change-log
-    title: Change Log
+    title: 变更记录
     type: table
-    columns: [Date, Version, Description, Author]
-    instruction: Track changes made to this story document
+    columns: [日期, 版本, 描述, 作者]
+    instruction: 记录对此故事文档所做的变更
     owner: scrum-master
     editors: [scrum-master, dev-agent, qa-agent]
 
   - id: dev-agent-record
-    title: Dev Agent Record
-    instruction: This section is populated by the development agent during implementation
+    title: 开发智能体记录
+    instruction: 本节由开发智能体在实现过程中填写
     owner: dev-agent
     editors: [dev-agent]
     sections:
       - id: agent-model
-        title: Agent Model Used
+        title: 所用智能体模型
         template: "{{agent_model_name_version}}"
-        instruction: Record the specific AI agent model and version used for development
+        instruction: 记录用于开发的具体 AI 智能体模型与版本
         owner: dev-agent
         editors: [dev-agent]
 
       - id: debug-log-references
-        title: Debug Log References
-        instruction: Reference any debug logs or traces generated during development
+        title: 调试日志引用
+        instruction: 引用开发过程中产生的调试日志或追踪
         owner: dev-agent
         editors: [dev-agent]
 
       - id: completion-notes
-        title: Completion Notes List
-        instruction: Notes about the completion of tasks and any issues encountered
+        title: 完成说明清单
+        instruction: 记录任务完成情况与遇到的任何问题
         owner: dev-agent
         editors: [dev-agent]
 
       - id: file-list
-        title: File List
-        instruction: List all files created, modified, or affected during story implementation
+        title: 文件列表
+        instruction: 列出在实现过程中创建、修改或受影响的所有文件
         owner: dev-agent
         editors: [dev-agent]
 
   - id: qa-results
-    title: QA Results
-    instruction: Results from QA Agent QA review of the completed story implementation
+    title: QA 结果
+    instruction: QA 智能体对已完成故事实现的评审结果
     owner: qa-agent
     editors: [qa-agent]

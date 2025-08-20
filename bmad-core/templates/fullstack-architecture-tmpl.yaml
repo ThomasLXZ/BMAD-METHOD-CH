@@ -1,12 +1,12 @@
 # <!-- Powered by BMAD™ Core -->
 template:
   id: fullstack-architecture-template-v2
-  name: Fullstack Architecture Document
+  name: 全栈架构文档
   version: 2.0
   output:
     format: markdown
     filename: docs/architecture.md
-    title: "{{project_name}} Fullstack Architecture Document"
+    title: "{{project_name}} 全栈架构文档"
 
 workflow:
   mode: interactive
@@ -14,108 +14,108 @@ workflow:
 
 sections:
   - id: introduction
-    title: Introduction
+    title: 引言
     instruction: |
-      If available, review any provided relevant documents to gather all relevant context before beginning. At minimum, you should have access to docs/prd.md and docs/front-end-spec.md. Ask the user for any documents you need but cannot locate. This template creates a unified architecture that covers both backend and frontend concerns to guide AI-driven fullstack development.
+      如有可用，请在开始前审阅相关文档以获取完整上下文；至少应能访问 docs/prd.md 与 docs/front-end-spec.md。若所需文档未能找到，请向用户索取。本模板将联合后端与前端关注点，构建统一架构以指导 AI 驱动的全栈开发。
     elicit: true
     content: |
-      This document outlines the complete fullstack architecture for {{project_name}}, including backend systems, frontend implementation, and their integration. It serves as the single source of truth for AI-driven development, ensuring consistency across the entire technology stack.
+      本文档概述 {{project_name}} 的完整全栈架构，涵盖后端系统、前端实现及其集成。它作为 AI 驱动开发的“单一事实来源”，确保整个技术栈的一致性。
 
-      This unified approach combines what would traditionally be separate backend and frontend architecture documents, streamlining the development process for modern fullstack applications where these concerns are increasingly intertwined.
+      统一的编排将传统上分离的后端与前端架构文档合而为一，更契合现代全栈应用中两者日益交织的实际，简化整体开发流程。
     sections:
       - id: starter-template
-        title: Starter Template or Existing Project
+        title: 起始模板或既有项目
         instruction: |
-          Before proceeding with architecture design, check if the project is based on any starter templates or existing codebases:
+          在进行架构设计前，确认项目是否基于起始模板或既有代码库：
 
-          1. Review the PRD and other documents for mentions of:
-          - Fullstack starter templates (e.g., T3 Stack, MEAN/MERN starters, Django + React templates)
-          - Monorepo templates (e.g., Nx, Turborepo starters)
-          - Platform-specific starters (e.g., Vercel templates, AWS Amplify starters)
-          - Existing projects being extended or cloned
+          1. 在 PRD 与其他文档中查找是否提及：
+          - 全栈起始模板（如 T3 Stack、MEAN/MERN 起步、Django + React 模板等）
+          - Monorepo 模板（如 Nx、Turborepo 起步）
+          - 平台特定起步（如 Vercel 模板、AWS Amplify 起步）
+          - 正在扩展或克隆的既有项目
 
-          2. If starter templates or existing projects are mentioned:
-          - Ask the user to provide access (links, repos, or files)
-          - Analyze to understand pre-configured choices and constraints
-          - Note any architectural decisions already made
-          - Identify what can be modified vs what must be retained
+          2. 如提及起始模板或既有项目：
+          - 请用户提供访问方式（链接、仓库或文件）
+          - 分析以理解预配置选择与约束
+          - 记录已做出的架构决策
+          - 识别可改部分与必须保留部分
 
-          3. If no starter is mentioned but this is greenfield:
-          - Suggest appropriate fullstack starters based on tech preferences
-          - Consider platform-specific options (Vercel, AWS, etc.)
-          - Let user decide whether to use one
+          3. 若未提及起始模板且为全新项目：
+          - 基于技术偏好建议合适的全栈起步
+          - 考虑平台特定方案（Vercel、AWS 等）
+          - 由用户决定是否采用
 
-          4. Document the decision and any constraints it imposes
+          4. 记录该决策及其带来的约束
 
-          If none, state "N/A - Greenfield project"
+          如无，注明“无——全新项目（Greenfield）”。
       - id: changelog
-        title: Change Log
+        title: 变更记录
         type: table
-        columns: [Date, Version, Description, Author]
-        instruction: Track document versions and changes
+        columns: [日期, 版本, 描述, 作者]
+        instruction: 记录文档版本与变更
 
   - id: high-level-architecture
-    title: High Level Architecture
-    instruction: This section contains multiple subsections that establish the foundation. Present all subsections together, then elicit feedback on the complete section.
+    title: 高层架构
+    instruction: 本节包含多组基础子章节。请一次性呈现全部子节，再就完整内容收集反馈。
     elicit: true
     sections:
       - id: technical-summary
-        title: Technical Summary
+        title: 技术概述
         instruction: |
-          Provide a comprehensive overview (4-6 sentences) covering:
-          - Overall architectural style and deployment approach
-          - Frontend framework and backend technology choices
-          - Key integration points between frontend and backend
-          - Infrastructure platform and services
-          - How this architecture achieves PRD goals
+          提供 4–6 句的综合概述，覆盖：
+          - 整体架构风格与部署方式
+          - 前端框架与后端技术选择
+          - 前后端的关键集成点
+          - 基础设施平台与服务
+          - 本架构如何实现 PRD 的目标
       - id: platform-infrastructure
-        title: Platform and Infrastructure Choice
+        title: 平台与基础设施选择
         instruction: |
-          Based on PRD requirements and technical assumptions, make a platform recommendation:
+          基于 PRD 要求与技术假设，给出平台推荐：
 
-          1. Consider common patterns (not an exhaustive list, use your own best judgement and search the web as needed for emerging trends):
+          1. 考虑常见模式（非穷举，可结合判断并检索新趋势）：
           - **Vercel + Supabase**: For rapid development with Next.js, built-in auth/storage
           - **AWS Full Stack**: For enterprise scale with Lambda, API Gateway, S3, Cognito
           - **Azure**: For .NET ecosystems or enterprise Microsoft environments
           - **Google Cloud**: For ML/AI heavy applications or Google ecosystem integration
 
-          2. Present 2-3 viable options with clear pros/cons
-          3. Make a recommendation with rationale
-          4. Get explicit user confirmation
+          2. 提供 2–3 个可行选项并说明优缺点
+          3. 给出推荐并说明理由
+          4. 获得用户的明确确认
 
-          Document the choice and key services that will be used.
+          记录最终选择与将使用的关键服务。
         template: |
           **Platform:** {{selected_platform}}
           **Key Services:** {{core_services_list}}
           **Deployment Host and Regions:** {{regions}}
       - id: repository-structure
-        title: Repository Structure
+        title: 仓库结构
         instruction: |
-          Define the repository approach based on PRD requirements and platform choice, explain your rationale or ask questions to the user if unsure:
+          基于 PRD 与平台选择定义仓库方案；如有不确定，请说明你的理由或向用户提问：
 
-          1. For modern fullstack apps, monorepo is often preferred
-          2. Consider tooling (Nx, Turborepo, Lerna, npm workspaces)
-          3. Define package/app boundaries
-          4. Plan for shared code between frontend and backend
+          1. 对现代全栈应用，monorepo 通常是首选
+          2. 考虑工具（Nx、Turborepo、Lerna、npm workspaces）
+          3. 规划包/应用的边界
+          4. 规划前后端的共享代码
         template: |
           **Structure:** {{repo_structure_choice}}
           **Monorepo Tool:** {{monorepo_tool_if_applicable}}
           **Package Organization:** {{package_strategy}}
       - id: architecture-diagram
-        title: High Level Architecture Diagram
+        title: 高层架构图
         type: mermaid
         mermaid_type: graph
         instruction: |
-          Create a Mermaid diagram showing the complete system architecture including:
-          - User entry points (web, mobile)
-          - Frontend application deployment
-          - API layer (REST/GraphQL)
-          - Backend services
-          - Databases and storage
-          - External integrations
-          - CDN and caching layers
+          使用 Mermaid 绘制完整系统架构图，包含：
+          - 用户入口（Web、移动端）
+          - 前端应用部署
+          - API 层（REST/GraphQL）
+          - 后端服务
+          - 数据库与存储
+          - 外部集成
+          - CDN 与缓存层
 
-          Use appropriate diagram type for clarity.
+          选择合适的图式以确保表达清晰。
       - id: architectural-patterns
         title: Architectural Patterns
         instruction: |
